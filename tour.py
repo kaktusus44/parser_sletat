@@ -42,7 +42,8 @@ def get_first_data(external_url, external_referer):
 
 
 
-def get_calculate(id):
+def get_calculate(id, counter):
+    counter_inside=counter
     ua = UserAgent()
     header = {
         "authority": "module.sletat.ru",
@@ -56,9 +57,13 @@ def get_calculate(id):
     htmlContent = requests.get(url, headers=header)
     json_str = json.loads(htmlContent.text)
     time.sleep(1.0)
-    if (json_str['GetLoadStateResult']['Data'][0]['MinPrice']) == 0 or (json_str['GetLoadStateResult']['Data'][0]['MinPrice']) is None :
+    if counter_inside > 30:
+        return("temporarily No Price")
+    elif (json_str['GetLoadStateResult']['Data'][0]['MinPrice']) == 0 or (json_str['GetLoadStateResult']['Data'][0]['MinPrice']) is None:
         print("No Price - Retry")
-        return get_calculate(id)
+        counter_inside+=1
+        print(counter_inside)
+        return get_calculate(id, counter_inside)
     else:
         return(json_str['GetLoadStateResult']['Data'][0]['MinPrice'])
 
@@ -94,24 +99,24 @@ if __name__ == '__main__':
    tour1 = (str(get_first_data(
        'https://module.sletat.ru/slt/Main.svc/GetTours?requestId=0&pageSize=10&pageNumber=1&countryId=40&cityFromId=832&cities=1592&meals=115&stars=&s_nightsMin=10&s_nightsMax=10&currencyAlias=RUB&groupBy=&includeDescriptions=1&includeOilTaxesAndVisa=1&minHotelRating=&s_showcase=false&templateName=&filterToursForType=0&excludeToursForType=0&filterToursForTransportType=0&filter=1&f_to_id=380&s_hotelIsNotInStop=true&s_hasTickets=true&s_ticketsIncluded=true&updateResult=1&hotels=40581&s_adults=2&s_kids=1&s_kids_ages=5&s_departFrom=15%2F04%2F2023&s_departTo=15%2F04%2F2023&calcFullPrice=1&showHotelFacilities=1&requestSource=8',
        'https://sletat.ru/tour/380-1497125986-1861190411/')))
-   send_telegram('Sentido Mamlouk Palace Resort Egypt ' + (str(get_calculate(tour1))))
+   send_telegram('Sentido Mamlouk Palace Resort Egypt ' + (str(get_calculate(tour1, 0))))
 
 
    tour2 = (str(get_first_data(
        'https://module.sletat.ru/slt/Main.svc/GetTours?requestId=0&pageSize=10&pageNumber=1&countryId=40&cityFromId=832&cities=1592&meals=115&stars=&s_nightsMin=10&s_nightsMax=10&currencyAlias=RUB&groupBy=&includeDescriptions=1&includeOilTaxesAndVisa=1&minHotelRating=&s_showcase=false&templateName=&filterToursForType=0&excludeToursForType=0&filterToursForTransportType=0&filter=1&f_to_id=380&s_hotelIsNotInStop=true&s_hasTickets=true&s_ticketsIncluded=true&updateResult=1&hotels=36454&s_adults=2&s_kids=1&s_kids_ages=5&s_departFrom=15%2F04%2F2023&s_departTo=15%2F04%2F2023&calcFullPrice=1&showHotelFacilities=1&requestSource=8',
        'https://sletat.ru/tour/380-1497246628-1861200441/')))
-   send_telegram('Albatros White Beach Egypt ' + (str(get_calculate(tour2))))
+   send_telegram('Albatros White Beach Egypt ' + (str(get_calculate(tour2, 0))))
 
    send_telegram('---------------------- Эмираты -----------------------')
    tour3 = (str(get_first_data(
        'https://module.sletat.ru/slt/Main.svc/GetTours?requestId=0&pageSize=10&pageNumber=1&countryId=90&cityFromId=832&cities=1194&meals=115&stars=&s_nightsMin=10&s_nightsMax=10&currencyAlias=RUB&groupBy=&includeDescriptions=1&includeOilTaxesAndVisa=1&minHotelRating=&s_showcase=false&templateName=&filterToursForType=0&excludeToursForType=0&filterToursForTransportType=0&filter=1&f_to_id=380&s_hotelIsNotInStop=true&s_hasTickets=true&s_ticketsIncluded=true&updateResult=1&hotels=82939&s_adults=2&s_kids=1&s_kids_ages=5&s_departFrom=16%2F04%2F2023&s_departTo=16%2F04%2F2023&calcFullPrice=1&showHotelFacilities=1&requestSource=8',
        'https://sletat.ru/tour/380-1860402775-1867235135/')))
-   send_telegram('DoubleTree by Hilton Resort & Spa Marjan Island OAE ' + (str(get_calculate(tour3))))
+   send_telegram('DoubleTree by Hilton Resort & Spa Marjan Island OAE ' + (str(get_calculate(tour3, 0))))
 
    tour4 = (str(get_first_data(
        'https://module.sletat.ru/slt/Main.svc/GetTours?requestId=0&pageSize=10&pageNumber=1&countryId=90&cityFromId=832&cities=1194&meals=115&stars=&s_nightsMin=10&s_nightsMax=10&currencyAlias=RUB&groupBy=&includeDescriptions=1&includeOilTaxesAndVisa=1&minHotelRating=&s_showcase=false&templateName=&filterToursForType=0&excludeToursForType=0&filterToursForTransportType=0&filter=1&f_to_id=380&s_hotelIsNotInStop=true&s_hasTickets=true&s_ticketsIncluded=true&updateResult=1&hotels=41538&s_adults=2&s_kids=1&s_kids_ages=5&s_departFrom=14%2F04%2F2023&s_departTo=14%2F04%2F2023&calcFullPrice=1&showHotelFacilities=1&requestSource=8',
        'https://sletat.ru/tour/380-1860402811-1867235135/')))
-   send_telegram('The Cove Rotana Resort OAE ' + (str(get_calculate(tour4))))
+   send_telegram('The Cove Rotana Resort OAE ' + (str(get_calculate(tour4, 0))))
     
    currency = Currency()
    send_telegram('Сейчас курс: 1 доллар =' + currency.get_currency_price()) 
